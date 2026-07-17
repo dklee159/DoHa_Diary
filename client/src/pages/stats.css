@@ -1,0 +1,90 @@
+.stat-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.stat-tile {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.stat-num {
+  font-family: var(--font-numeric);
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.stat-num small {
+  font-size: 15px;
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--ink-soft);
+  margin-left: 2px;
+}
+
+.chart-card {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 12px 8px;
+  margin-bottom: 14px;
+}
+
+.chart-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin: 0 4px 6px;
+}
+
+.chart-tip {
+  position: absolute;
+  transform: translate(-50%, -110%);
+  background: var(--ink);
+  color: #fff;
+  font-size: 12px;
+  padding: 5px 9px;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cycle-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.cycle-table th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--ink-soft);
+  font-size: 12px;
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cycle-table td {
+  padding: 8px 4px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.cycle-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cycle-table .num {
+  font-family: var(--font-numeric);
+}

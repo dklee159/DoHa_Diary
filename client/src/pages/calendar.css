@@ -1,0 +1,336 @@
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cal-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+}
+
+.cal-title .cal-year {
+  font-size: 13px;
+  color: var(--ink-soft);
+  display: block;
+  line-height: 1;
+}
+
+.cal-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.cal-nav button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  display: grid;
+  place-items: center;
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+
+.cal-nav button:hover {
+  color: var(--rose-deep);
+  border-color: var(--rose-soft);
+}
+
+/* 범례 */
+.cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.cal-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-chip {
+  width: 14px;
+  height: 10px;
+  border-radius: 4px;
+}
+
+/* 그리드 */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 4px 8px;
+}
+
+.cal-dow {
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-soft);
+  padding-bottom: 8px;
+}
+
+.cal-dow.sun { color: var(--rose-deep); }
+.cal-dow.sat { color: var(--violet); }
+
+.cal-cell {
+  position: relative;
+  height: 56px;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.cal-cell:disabled {
+  opacity: 0.3;
+}
+
+/* 주기 밴드 — 연속 기간을 알약처럼 잇는다 */
+.cal-band {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  right: 0;
+  height: 28px;
+  z-index: 0;
+}
+
+.cal-band.start {
+  left: 3px;
+  border-top-left-radius: 99px;
+  border-bottom-left-radius: 99px;
+}
+
+.cal-band.end {
+  right: 3px;
+  border-top-right-radius: 99px;
+  border-bottom-right-radius: 99px;
+}
+
+.cal-band.b-period { background: var(--rose-soft); }
+.cal-band.b-predicted { background: var(--rose-soft); opacity: 0.45; }
+.cal-band.b-fertile { background: var(--violet-soft); }
+
+.cal-daynum {
+  position: relative;
+  z-index: 1;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-top: 14px;
+  border-radius: 50%;
+  font-size: 13px;
+}
+
+.cal-cell.is-period .cal-daynum { color: var(--rose-deep); font-weight: 700; }
+.cal-cell.is-ovulation .cal-daynum {
+  background: var(--violet);
+  color: #fff;
+  font-weight: 700;
+}
+.cal-cell.is-today .cal-daynum {
+  box-shadow: inset 0 0 0 2px var(--ink);
+  font-weight: 700;
+}
+.cal-cell.dow-sun .cal-daynum { color: var(--rose-deep); }
+.cal-cell.dow-sat .cal-daynum { color: var(--violet); }
+.cal-cell.is-ovulation.dow-sun .cal-daynum,
+.cal-cell.is-ovulation.dow-sat .cal-daynum { color: #fff; }
+
+/* 셀 하단 점: 일정/기록 */
+.cal-dots {
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  z-index: 1;
+}
+
+.cal-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.dot-event { background: var(--peach); }
+.dot-log { background: var(--ink-soft); }
+
+/* ── 하단 시트 ─────────────────────────── */
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(69, 54, 60, 0.32);
+  z-index: 30;
+  animation: fade-in 0.2s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+.sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  max-height: 82dvh;
+  overflow-y: auto;
+  background: var(--bg);
+  border-radius: 22px 22px 0 0;
+  padding: 10px 20px calc(20px + env(safe-area-inset-bottom));
+  z-index: 31;
+  animation: sheet-up 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+@keyframes sheet-up {
+  from { transform: translate(-50%, 40%); opacity: 0.5; }
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--line);
+  margin: 4px auto 14px;
+}
+
+.sheet-date {
+  font-family: var(--font-display);
+  font-size: 19px;
+}
+
+.sheet-status {
+  font-size: 13px;
+  margin: 2px 0 14px;
+  color: var(--ink-soft);
+}
+
+.sheet-status strong { font-weight: 700; }
+.sheet-status.st-period strong { color: var(--rose-deep); }
+.sheet-status.st-fertile strong,
+.sheet-status.st-ovulation strong { color: var(--violet); }
+.sheet-status.st-pms strong { color: var(--peach); }
+.sheet-status.st-predicted_period strong { color: var(--rose); }
+
+.sheet-section {
+  margin-bottom: 16px;
+}
+
+.sheet-section h3 {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+
+/* 칩 선택 */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 7px 13px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-size: 13px;
+  color: var(--ink-soft);
+  transition: all 0.12s ease;
+}
+
+.chip.on {
+  background: var(--rose-soft);
+  border-color: var(--rose);
+  color: var(--rose-deep);
+  font-weight: 500;
+}
+
+.chip.on-violet {
+  background: var(--violet-soft);
+  border-color: var(--violet);
+  color: var(--violet);
+  font-weight: 500;
+}
+
+.sheet textarea {
+  width: 100%;
+  min-height: 72px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  resize: vertical;
+}
+
+.sheet-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* 일정 추가 폼 */
+.event-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.event-form input[type='text'] {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  min-width: 0;
+}
+
+.event-form select {
+  padding: 10px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.share-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 10px;
+  user-select: none;
+}
+
+.share-toggle input {
+  accent-color: var(--violet);
+  width: 16px;
+  height: 16px;
+}
+
+.event-del {
+  margin-left: auto;
+  color: var(--ink-soft);
+  font-size: 12px;
+  padding: 4px;
+}
+
+.event-del:hover { color: var(--rose-deep); }

@@ -1,0 +1,163 @@
+.home-date {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.home-greeting {
+  font-family: var(--font-display);
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+
+.hero {
+  text-align: center;
+  padding: 18px 8px 20px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.hero-owner {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.cycle-arc {
+  width: 100%;
+  max-width: 320px;
+  margin: 2px auto -6px;
+  display: block;
+}
+
+.arc-seg {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: arc-draw 0.7s ease-out forwards;
+}
+
+@keyframes arc-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.arc-today {
+  animation: rise-in 0.5s ease-out 0.7s both;
+}
+
+.hero .dday {
+  font-family: var(--font-numeric);
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.hero .dday em {
+  font-style: italic;
+  color: var(--rose-deep);
+}
+
+.hero-status {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.hero-hint {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 6px;
+}
+
+/* 파트너 카드 */
+.partner-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.partner-heart {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--rose-soft);
+  display: grid;
+  place-items: center;
+  color: var(--rose-deep);
+}
+
+.partner-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.partner-status {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* 일정 목록 */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  margin: 22px 0 10px;
+}
+
+.event-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 2px;
+  border-bottom: 1px dashed var(--line);
+  font-size: 14px;
+}
+
+.event-row:last-child {
+  border-bottom: none;
+}
+
+.event-date {
+  flex: none;
+  width: 52px;
+  font-family: var(--font-numeric);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.event-cat {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.event-cat.date { background: var(--rose); }
+.event-cat.anniversary { background: var(--peach); }
+.event-cat.trip { background: var(--violet); }
+.event-cat.etc { background: var(--ink-soft); }
+
+.event-shared {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--violet);
+  background: var(--violet-soft);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.empty-note {
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-align: center;
+  padding: 18px 0;
+}
+
+.disclaimer {
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-top: 26px;
+  opacity: 0.8;
+}
