@@ -6,3 +6,4 @@ dev-dist/
 *.db-shm
 *.db-wal
 .env
+e2e/shots/

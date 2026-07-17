@@ -92,7 +92,7 @@ export function CycleArc({
   return (
     <svg
       className="cycle-arc"
-      viewBox="0 0 300 132"
+      viewBox="-9 12 318 128"
       role="img"
       aria-label="이번 주기 진행 상황"
     >

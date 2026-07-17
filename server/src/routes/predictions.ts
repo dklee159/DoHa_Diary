@@ -10,9 +10,10 @@ predictionsRouter.get('/', (req: Request, res: Response) => {
   const me = currentUser(res)
   const today = isDateStr(req.query.today) ? req.query.today : todayStr()
 
+  // id 포함: 클라이언트가 기록 수정/삭제 시 필요하다
   const periods = db
-    .prepare('SELECT start_date, end_date FROM periods WHERE user_id = ? ORDER BY start_date')
-    .all(me.id) as PeriodRecord[]
+    .prepare('SELECT id, start_date, end_date FROM periods WHERE user_id = ? ORDER BY start_date')
+    .all(me.id) as (PeriodRecord & { id: number })[]
   const prediction = calcPredictions(periods, {
     cycleLenOverride: me.cycle_len_override,
     periodLenOverride: me.period_len_override,

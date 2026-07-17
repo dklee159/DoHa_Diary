@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { api } from '../lib/api'
 import { useAuth } from '../lib/auth'
-import { addDays, calendarCells, todayStr } from '../lib/date'
+import { calendarCells, todayStr } from '../lib/date'
 import { statusForDate } from '../lib/cycleView'
 import { DaySheet } from '../components/DaySheet'
 import type {
@@ -126,8 +126,13 @@ export default function CalendarPage() {
           const status = statusOf(cell.date)
           const group = bandGroup(status)
           const dow = idx % 7
-          const prevGroup = dow === 0 ? null : bandGroup(statusOf(addDays(cell.date, -1)))
-          const nextGroup = dow === 6 ? null : bandGroup(statusOf(addDays(cell.date, 1)))
+          // 주 경계·월 경계(비활성 셀)에서는 밴드를 알약으로 마감한다
+          const prevCell = dow === 0 ? null : cells[idx - 1]
+          const nextCell = dow === 6 ? null : cells[idx + 1]
+          const prevGroup =
+            prevCell?.inMonth ? bandGroup(statusOf(prevCell.date)) : null
+          const nextGroup =
+            nextCell?.inMonth ? bandGroup(statusOf(nextCell.date)) : null
           const bandStart = group !== null && prevGroup !== group
           const bandEnd = group !== null && nextGroup !== group
 

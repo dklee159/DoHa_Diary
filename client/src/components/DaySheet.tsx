@@ -72,6 +72,11 @@ export function DaySheet({
     setMemo(log?.memo ?? '')
   }, [log, date])
 
+  // 파트너 정보가 시트 마운트보다 늦게 도착해도 "함께 일정" 기본값을 켠다
+  useEffect(() => {
+    setEvShared(hasCouple)
+  }, [hasCouple])
+
   // 이 날짜가 포함된 실제 생리 기록 / 진행 중(종료 미입력) 기록
   const containing = periods.find(
     (p) => p.start_date <= date && date <= (p.end_date ?? p.start_date),
@@ -154,14 +159,21 @@ export function DaySheet({
                     이 생리 기록 삭제
                   </button>
                 </>
-              ) : ongoing && date <= today ? (
-                <button className="btn btn-rose" disabled={busy} onClick={() => endPeriod(ongoing)}>
-                  이 날짜까지 생리했어요
-                </button>
               ) : date <= today ? (
-                <button className="btn btn-rose" disabled={busy} onClick={startPeriod}>
-                  이 날부터 생리 시작
-                </button>
+                <>
+                  {ongoing && (
+                    <button className="btn btn-rose" disabled={busy} onClick={() => endPeriod(ongoing)}>
+                      이 날짜까지 생리했어요
+                    </button>
+                  )}
+                  <button
+                    className={`btn ${ongoing ? 'btn-ghost' : 'btn-rose'}`}
+                    disabled={busy}
+                    onClick={startPeriod}
+                  >
+                    이 날부터 생리 시작
+                  </button>
+                </>
               ) : (
                 <p style={{ fontSize: 13, color: 'var(--ink-soft)' }}>
                   미래 날짜에는 생리 기록을 남길 수 없어요.
