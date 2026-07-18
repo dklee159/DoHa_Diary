@@ -49,23 +49,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false)
       return
     }
+
     // 캐시로 먼저 렌더한 뒤 백그라운드에서 최신화한다.
-    api<{ user: User }>('/me')
-      .then((data) => {
+    // 서버가 잠들어 있으면(Render free 콜드 스타트) 깨어날 때까지 재시도한다.
+    let cancelled = false
+    async function loadMe(attempt: number) {
+      try {
+        const data = await api<{ user: User }>('/me')
+        if (cancelled) return
         cacheUser(data.user)
         setUser(data.user)
-      })
-      .catch((err) => {
-        // 401(만료·무효)은 api.ts의 전역 핸들러가 토큰을 지운다.
-        // 네트워크 오류/서버 기동 중에는 세션을 유지한다 — 여기서 토큰을 지우면
-        // 서버가 잠들 때마다 강제 로그아웃되는 버그가 된다.
+        setLoading(false)
+      } catch (err) {
+        if (cancelled) return
+        // 401(만료·무효)일 때만 세션을 버린다. 네트워크 오류/서버 기동 중에
+        // 토큰을 지우면 서버가 잠들 때마다 강제 로그아웃되는 버그가 된다.
         if (err instanceof ApiError && err.status === 401) {
           clearToken()
           cacheUser(null)
           setUser(null)
+          setLoading(false)
+          return
         }
-      })
-      .finally(() => setLoading(false))
+        if (attempt < 8 && getToken()) {
+          setTimeout(() => loadMe(attempt + 1), Math.min(15_000, 2_000 * (attempt + 1)))
+        } else {
+          setLoading(false)
+        }
+      }
+    }
+    loadMe(0)
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const login = useCallback((token: string, nextUser: User) => {

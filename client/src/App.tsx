@@ -18,9 +18,12 @@ import Settings from './pages/Settings'
 function Splash() {
   return (
     <div className="page" style={{ display: 'grid', placeItems: 'center', minHeight: '80dvh' }}>
-      <p style={{ fontFamily: 'var(--font-display)', color: 'var(--ink-soft)' }}>
-        도하 다이어리
-      </p>
+      <div style={{ textAlign: 'center' }}>
+        <p style={{ fontFamily: 'var(--font-display)', fontSize: 20 }}>도하 다이어리</p>
+        <p style={{ color: 'var(--ink-soft)', fontSize: 13, marginTop: 8 }}>
+          잠든 서버를 깨우는 중이에요… 잠시만요
+        </p>
+      </div>
     </div>
   )
 }
