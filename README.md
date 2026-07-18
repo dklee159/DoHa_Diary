@@ -42,6 +42,35 @@ e2e/     Playwright 시나리오
 
 > 예측은 참고용이며 피임·의학적 판단에 사용할 수 없습니다.
 
+## 배포 (Render / Railway)
+
+두 플랫폼 모두 설정 파일이 저장소에 준비되어 있어 **GitHub 저장소 연결만 하면 됩니다.**
+먼저 GitHub에 저장소를 만들어 푸시하세요:
+
+```bash
+git remote add origin https://github.com/<계정>/doha-diary.git
+git push -u origin main
+```
+
+### Railway (추천 — SQLite 볼륨이 간단)
+
+1. railway.app → New Project → **Deploy from GitHub repo** 선택 ([railway.json](railway.json) 자동 인식)
+2. 서비스 → **Settings → Volumes → Add Volume**, Mount path `/data`
+3. **Variables**에 추가: `DB_PATH=/data/data.db`, `JWT_SECRET=<긴 랜덤 문자열>`
+4. Settings → Networking → **Generate Domain** → 발급된 URL로 접속
+
+### Render
+
+1. render.com → New → **Blueprint** → 이 저장소 선택 ([render.yaml](render.yaml)이 서비스·디스크·환경변수를 자동 구성)
+2. 그대로 배포하면 끝. JWT_SECRET은 자동 생성됩니다.
+
+> Render의 영구 디스크는 유료 플랜(starter, 월 $7)이 필요합니다. free 플랜은 재시작 시
+> SQLite 데이터가 사라지므로 실사용이라면 Railway 볼륨(사용량 과금, 소규모 월 $1~5)
+> 또는 Render starter를 쓰세요.
+
+배포 후 확인: `https://<도메인>/api/health` 가 `{"ok":true}` 를 반환하면 정상입니다.
+HTTPS 도메인에서는 PWA 설치(홈 화면 추가)도 완전하게 동작합니다.
+
 ## 프라이버시
 
 - 증상·기분·메모는 **본인만** 볼 수 있습니다 (파트너 API에 절대 미포함).

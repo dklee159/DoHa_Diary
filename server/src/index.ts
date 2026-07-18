@@ -13,6 +13,9 @@ import { predictionsRouter } from './routes/predictions.js'
 const app = express()
 app.use(express.json())
 
+// 배포 플랫폼(Render/Railway) 헬스체크용
+app.get('/api/health', (_req, res) => res.json({ ok: true }))
+
 app.use('/api/auth', authRouter)
 app.use('/api/me', authRequired, meRouter)
 app.use('/api/periods', authRequired, periodsRouter)
