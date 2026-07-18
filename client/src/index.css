@@ -28,10 +28,15 @@
 }
 
 html {
+  height: 100%;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
+  height: 100%;
+  /* iOS 홈화면 설치형(standalone)에서 body 스크롤이 잠기는 WebKit 버그 회피:
+     스크롤은 #root가 담당한다 */
+  overflow: hidden;
   font-family: var(--font-body);
   color: var(--ink);
   background: var(--bg);
@@ -42,7 +47,9 @@ body {
 #root {
   max-width: 480px;
   margin: 0 auto;
-  min-height: 100dvh;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--bg);
 }
 
