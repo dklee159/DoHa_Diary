@@ -42,34 +42,34 @@ e2e/     Playwright 시나리오
 
 > 예측은 참고용이며 피임·의학적 판단에 사용할 수 없습니다.
 
-## 배포 (Render / Railway)
+## 배포 — 완전 무료 (Render free + Turso free)
 
-두 플랫폼 모두 설정 파일이 저장소에 준비되어 있어 **GitHub 저장소 연결만 하면 됩니다.**
-먼저 GitHub에 저장소를 만들어 푸시하세요:
+DB는 Turso(SQLite 호환 클라우드, 카드 등록 불필요), 서버는 Render free 웹 서비스를 씁니다.
+로컬 개발은 계정 없이 지금처럼 SQLite 파일을 그대로 사용합니다.
+
+**1) GitHub에 푸시**
 
 ```bash
 git remote add origin https://github.com/<계정>/doha-diary.git
 git push -u origin main
 ```
 
-### Railway (추천 — SQLite 볼륨이 간단)
+**2) Turso DB 만들기** — [app.turso.tech](https://app.turso.tech) 가입(GitHub 로그인, 무료)
 
-1. railway.app → New Project → **Deploy from GitHub repo** 선택 ([railway.json](railway.json) 자동 인식)
-2. 서비스 → **Settings → Volumes → Add Volume**, Mount path `/data`
-3. **Variables**에 추가: `DB_PATH=/data/data.db`, `JWT_SECRET=<긴 랜덤 문자열>`
-4. Settings → Networking → **Generate Domain** → 발급된 URL로 접속
+- Create Database → 이름 입력, 지역은 `ap-northeast-1 (Tokyo)` 권장
+- 데이터베이스 화면에서 **URL**(`libsql://<db>-<org>.turso.io`)과 **Create Token**으로 토큰 복사
 
-### Render
+**3) Render 연결** — [render.com](https://render.com) 가입 후 New → **Blueprint** → 이 저장소 선택
 
-1. render.com → New → **Blueprint** → 이 저장소 선택 ([render.yaml](render.yaml)이 서비스·디스크·환경변수를 자동 구성)
-2. 그대로 배포하면 끝. JWT_SECRET은 자동 생성됩니다.
+- [render.yaml](render.yaml)이 서비스·헬스체크·JWT_SECRET을 자동 구성합니다
+- 환경변수 입력창에 2)에서 복사한 `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`만 넣으면 끝
 
-> Render의 영구 디스크는 유료 플랜(starter, 월 $7)이 필요합니다. free 플랜은 재시작 시
-> SQLite 데이터가 사라지므로 실사용이라면 Railway 볼륨(사용량 과금, 소규모 월 $1~5)
-> 또는 Render starter를 쓰세요.
-
-배포 후 확인: `https://<도메인>/api/health` 가 `{"ok":true}` 를 반환하면 정상입니다.
+배포 후 `https://<도메인>/api/health` 가 `{"ok":true}` 를 반환하면 정상입니다.
 HTTPS 도메인에서는 PWA 설치(홈 화면 추가)도 완전하게 동작합니다.
+
+> Render free는 15분 미사용 시 잠들어 첫 접속이 30~60초 느립니다(이후엔 정상 속도).
+> 유료로 올릴 생각이 있다면 [railway.json](railway.json)도 준비되어 있습니다
+> (Railway: 30일 체험 후 월 $1 Free 플랜, 볼륨 마운트 `/data` + `DB_PATH=/data/data.db` 설정).
 
 ## 프라이버시
 

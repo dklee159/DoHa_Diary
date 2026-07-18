@@ -1,4 +1,15 @@
+import type { NextFunction, Request, RequestHandler, Response } from 'express'
+
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+
+// Express 4는 async 핸들러의 reject를 잡지 못하므로 next(err)로 넘겨준다
+export function ah(
+  fn: (req: Request, res: Response) => Promise<unknown>,
+): RequestHandler {
+  return (req: Request, res: Response, next: NextFunction) => {
+    fn(req, res).catch(next)
+  }
+}
 
 export function isDateStr(s: unknown): s is string {
   if (typeof s !== 'string' || !DATE_RE.test(s)) return false

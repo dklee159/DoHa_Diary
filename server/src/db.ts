@@ -1,15 +1,21 @@
-import Database from 'better-sqlite3'
+import { createClient, type InValue } from '@libsql/client'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
-const dbPath = process.env.DB_PATH ?? path.join(here, '..', 'data.db')
+const localFile = process.env.DB_PATH ?? path.join(here, '..', 'data.db')
 
-export const db = new Database(dbPath)
-db.pragma('journal_mode = WAL')
-db.pragma('foreign_keys = ON')
+// 프로덕션(Render)에서는 Turso 클라우드 DB, 로컬 개발에서는 SQLite 파일을 그대로 쓴다.
+export const db = createClient(
+  process.env.TURSO_DATABASE_URL
+    ? {
+        url: process.env.TURSO_DATABASE_URL,
+        authToken: process.env.TURSO_AUTH_TOKEN,
+      }
+    : { url: `file:${localFile.replace(/\\/g, '/')}` },
+)
 
-db.exec(`
+await db.executeMultiple(`
 CREATE TABLE IF NOT EXISTS couples (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   invite_code TEXT UNIQUE NOT NULL,
@@ -62,6 +68,31 @@ CREATE INDEX IF NOT EXISTS idx_events_user ON events(user_id, date);
 CREATE INDEX IF NOT EXISTS idx_events_couple ON events(couple_id, date);
 `)
 
+export async function queryAll<T>(sql: string, args: InValue[] = []): Promise<T[]> {
+  const rs = await db.execute({ sql, args })
+  return rs.rows as unknown as T[]
+}
+
+export async function queryOne<T>(sql: string, args: InValue[] = []): Promise<T | undefined> {
+  return (await queryAll<T>(sql, args))[0]
+}
+
+export async function run(
+  sql: string,
+  args: InValue[] = [],
+): Promise<{ changes: number; lastId: number }> {
+  const rs = await db.execute({ sql, args })
+  return { changes: rs.rowsAffected, lastId: Number(rs.lastInsertRowid ?? 0) }
+}
+
+// 하나의 트랜잭션으로 묶어 실행한다
+export async function batchWrite(stmts: { sql: string; args?: InValue[] }[]): Promise<void> {
+  await db.batch(
+    stmts.map((s) => ({ sql: s.sql, args: s.args ?? [] })),
+    'write',
+  )
+}
+
 export interface UserRow {
   id: number
   username: string
@@ -75,13 +106,14 @@ export interface UserRow {
   onboarded: number
 }
 
-export function getUserById(id: number): UserRow | undefined {
-  return db.prepare('SELECT * FROM users WHERE id = ?').get(id) as UserRow | undefined
+export function getUserById(id: number): Promise<UserRow | undefined> {
+  return queryOne<UserRow>('SELECT * FROM users WHERE id = ?', [id])
 }
 
-export function getPartnerOf(user: UserRow): UserRow | undefined {
+export async function getPartnerOf(user: UserRow): Promise<UserRow | undefined> {
   if (!user.couple_id) return undefined
-  return db
-    .prepare('SELECT * FROM users WHERE couple_id = ? AND id != ?')
-    .get(user.couple_id, user.id) as UserRow | undefined
+  return queryOne<UserRow>('SELECT * FROM users WHERE couple_id = ? AND id != ?', [
+    user.couple_id,
+    user.id,
+  ])
 }

@@ -1,21 +1,20 @@
 # Render Blueprint — 대시보드에서 "New > Blueprint"로 이 저장소를 연결하면 그대로 생성됩니다.
-# 주의: SQLite 데이터를 유지하려면 디스크가 필요하고, 디스크는 유료 플랜(starter)에서만 지원됩니다.
-# free 플랜으로 바꾸면 배포는 되지만 재시작/재배포 시 데이터가 사라집니다.
+# 완전 무료 구성: Render free 웹 서비스 + Turso 무료 DB.
+# 배포 후 대시보드에서 TURSO_DATABASE_URL / TURSO_AUTH_TOKEN 값만 입력하면 됩니다.
+# (free 플랜은 15분 미사용 시 잠들었다가 첫 요청에 30~60초 걸려 깨어납니다)
 services:
   - type: web
     name: doha-diary
     runtime: node
-    plan: starter
+    plan: free
     buildCommand: npm install --include=dev && npm run build
     startCommand: npm start -w server
     healthCheckPath: /api/health
-    disk:
-      name: doha-data
-      mountPath: /data
-      sizeGB: 1
     envVars:
-      - key: DB_PATH
-        value: /data/data.db
+      - key: TURSO_DATABASE_URL
+        sync: false # 대시보드에서 입력 (libsql://<db>-<org>.turso.io)
+      - key: TURSO_AUTH_TOKEN
+        sync: false # 대시보드에서 입력
       - key: JWT_SECRET
         generateValue: true
       - key: NODE_VERSION

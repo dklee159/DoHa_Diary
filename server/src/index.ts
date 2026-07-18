@@ -35,6 +35,14 @@ if (fs.existsSync(clientDist)) {
   app.get('*', (_req, res) => res.sendFile(path.join(clientDist, 'index.html')))
 }
 
+// async 핸들러에서 넘어온 예외의 최종 처리
+app.use(
+  (err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    console.error(err)
+    if (!res.headersSent) res.status(500).json({ error: '서버에 문제가 발생했어요.' })
+  },
+)
+
 const port = Number(process.env.PORT ?? 3001)
 app.listen(port, () => {
   console.log(`도하 다이어리 서버 실행 중: http://localhost:${port}`)
