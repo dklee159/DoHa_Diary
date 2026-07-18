@@ -3,6 +3,7 @@ import { api } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { calendarCells, todayStr } from '../lib/date'
 import { statusForDate } from '../lib/cycleView'
+import { HOLIDAYS } from '../lib/holidays'
 import { DaySheet } from '../components/DaySheet'
 import type {
   DailyLog,
@@ -141,6 +142,7 @@ export default function CalendarPage() {
             status === 'period' ? 'is-period' : '',
             status === 'ovulation' ? 'is-ovulation' : '',
             cell.date === today ? 'is-today' : '',
+            HOLIDAYS[cell.date] ? 'is-holiday' : '',
             dow === 0 ? 'dow-sun' : dow === 6 ? 'dow-sat' : '',
           ]
             .filter(Boolean)
@@ -181,6 +183,7 @@ export default function CalendarPage() {
       {selected && (
         <DaySheet
           date={selected}
+          holidayName={HOLIDAYS[selected] ?? null}
           status={statusOf(selected)}
           periods={user?.trackingEnabled ? (mine?.periods ?? []) : []}
           events={events.filter((e) => e.date === selected)}

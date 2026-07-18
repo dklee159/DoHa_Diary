@@ -40,6 +40,7 @@ const CATEGORY_LABEL: Record<EventCategory, string> = {
 
 interface Props {
   date: string
+  holidayName?: string | null
   status: DayStatus
   periods: Period[]
   events: EventItem[]
@@ -51,7 +52,7 @@ interface Props {
 }
 
 export function DaySheet({
-  date, status, periods, events, log, canTrack, hasCouple, onClose, onChanged,
+  date, holidayName, status, periods, events, log, canTrack, hasCouple, onClose, onChanged,
 }: Props) {
   const today = todayStr()
   const [mood, setMood] = useState<Mood | null>(null)
@@ -139,7 +140,24 @@ export function DaySheet({
       <div className="sheet-backdrop" onClick={onClose} aria-hidden />
       <div className="sheet" role="dialog" aria-label={`${fmtFull(date)} 기록`}>
         <div className="sheet-handle" aria-hidden />
-        <p className="sheet-date">{fmtFull(date)}</p>
+        <p className="sheet-date">
+          {fmtFull(date)}
+          {holidayName && (
+            <span
+              style={{
+                marginLeft: 8,
+                fontSize: 12,
+                color: 'var(--rose-deep)',
+                background: 'var(--rose-soft)',
+                padding: '2px 8px',
+                borderRadius: 99,
+                verticalAlign: 'middle',
+              }}
+            >
+              {holidayName}
+            </span>
+          )}
+        </p>
         <p className={`sheet-status st-${status}`}>
           {statusLabel ? <>오늘 상태: <strong>{statusLabel}</strong></> : ' '}
         </p>

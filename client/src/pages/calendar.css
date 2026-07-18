@@ -143,10 +143,12 @@
   box-shadow: inset 0 0 0 2px var(--ink);
   font-weight: 700;
 }
-.cal-cell.dow-sun .cal-daynum { color: var(--rose-deep); }
+.cal-cell.dow-sun .cal-daynum,
+.cal-cell.is-holiday .cal-daynum { color: var(--rose-deep); }
 .cal-cell.dow-sat .cal-daynum { color: var(--violet); }
 .cal-cell.is-ovulation.dow-sun .cal-daynum,
-.cal-cell.is-ovulation.dow-sat .cal-daynum { color: #fff; }
+.cal-cell.is-ovulation.dow-sat .cal-daynum,
+.cal-cell.is-ovulation.is-holiday .cal-daynum { color: #fff; }
 
 /* 셀 하단 점: 일정/기록 */
 .cal-dots {

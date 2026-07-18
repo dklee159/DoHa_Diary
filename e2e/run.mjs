@@ -105,6 +105,22 @@ try {
   )
   await shot(a, '02-A-calendar')
 
+  // 🔍 한국 공휴일 표시: 8월로 이동해 광복절(8/15) 확인
+  await a.click('button[aria-label="다음 달"]')
+  await a.waitForSelector('button[aria-label="2026-08-15"]')
+  const holidayCls = await a.getAttribute('button[aria-label="2026-08-15"]', 'class')
+  await a.click('button[aria-label="2026-08-15"]')
+  await a.waitForSelector('.sheet')
+  const sheetHead = (await a.textContent('.sheet-date'))?.trim()
+  check(
+    '🔍 공휴일 표시 (8/15 광복절 빨간날 + 시트 라벨)',
+    !!holidayCls?.includes('is-holiday') && !!sheetHead?.includes('광복절'),
+    sheetHead,
+  )
+  await a.mouse.click(20, 60)
+  await a.click('button[aria-label="이전 달"]')
+  await a.waitForSelector('button[aria-label="2026-07-10"]')
+
   // ── ② A 기록: 7/10 증상/기분/비밀 메모 저장 ───────────────
   await a.click('button[aria-label="2026-07-10"]')
   await a.waitForSelector('.sheet')
