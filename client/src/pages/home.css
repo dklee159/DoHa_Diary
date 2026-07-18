@@ -45,6 +45,28 @@
   animation: rise-in 0.5s ease-out 0.7s both;
 }
 
+/* 아치 색 범례 — D-Day와 경쟁하지 않게 조용히 */
+.arc-legend {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin: 4px 0 10px;
+}
+
+.arc-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.arc-legend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
 .hero .dday {
   font-family: var(--font-numeric);
   font-size: 52px;

@@ -106,6 +106,12 @@ export default function Home() {
         <section className="hero rise-in" aria-label="오늘 상태">
           {heroOwner && <p className="hero-owner">{heroOwner}</p>}
           <CycleArc periods={heroData.periods} prediction={heroData.prediction} today={today} />
+          <p className="arc-legend" aria-hidden>
+            <span><i style={{ background: 'var(--rose)' }} />생리</span>
+            <span><i style={{ background: 'var(--violet)' }} />가임기</span>
+            <span><i style={{ background: 'var(--peach)' }} />PMS</span>
+            <span><i style={{ background: 'var(--ink)' }} />오늘</span>
+          </p>
           <p className="dday">{line.em ? <em>{line.big}</em> : line.big}</p>
           <p className="hero-status">{line.sub}</p>
           {heroData.prediction.nextPeriodStart && (
