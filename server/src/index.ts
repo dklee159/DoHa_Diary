@@ -1,4 +1,5 @@
 import express from 'express'
+import rateLimit from 'express-rate-limit'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -11,12 +12,23 @@ import { partnerRouter } from './routes/partner.js'
 import { predictionsRouter } from './routes/predictions.js'
 
 const app = express()
+// Render 등 프록시 뒤에서 실제 클라이언트 IP로 속도 제한을 걸기 위함
+app.set('trust proxy', 1)
 app.use(express.json())
 
 // 배포 플랫폼(Render/Railway) 헬스체크용
 app.get('/api/health', (_req, res) => res.json({ ok: true }))
 
-app.use('/api/auth', authRouter)
+// 로그인/가입 무차별 대입 방지: IP당 분당 10회
+const authLimiter = rateLimit({
+  windowMs: 60_000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: '시도가 너무 많아요. 잠시 후 다시 시도해 주세요.' },
+})
+
+app.use('/api/auth', authLimiter, authRouter)
 app.use('/api/me', authRequired, meRouter)
 app.use('/api/periods', authRequired, periodsRouter)
 app.use('/api/logs', authRequired, logsRouter)

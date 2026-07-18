@@ -1,4 +1,5 @@
 import { Router, type Request, type Response } from 'express'
+import rateLimit from 'express-rate-limit'
 import { randomInt } from 'node:crypto'
 import { batchWrite, getPartnerOf, queryOne, run } from '../db.js'
 import { currentUser } from '../auth.js'
@@ -43,8 +44,18 @@ coupleRouter.post(
   }),
 )
 
+// 초대 코드 무차별 대입 방지: IP당 분당 10회
+const joinLimiter = rateLimit({
+  windowMs: 60_000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: '시도가 너무 많아요. 잠시 후 다시 시도해 주세요.' },
+})
+
 coupleRouter.post(
   '/join',
+  joinLimiter,
   ah(async (req: Request, res: Response) => {
     const me = currentUser(res)
     if (me.couple_id) {

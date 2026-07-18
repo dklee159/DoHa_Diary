@@ -12,6 +12,7 @@
     "@libsql/client": "^0.17.4",
     "bcryptjs": "^2.4.3",
     "express": "^4.19.2",
+    "express-rate-limit": "^8.6.0",
     "jsonwebtoken": "^9.0.2",
     "tsx": "^4.16.0"
   },
