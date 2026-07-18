@@ -22,35 +22,90 @@
   color: var(--ink-soft);
 }
 
-.cycle-arc {
-  width: 100%;
+/* ── 주기 타임라인 바 ─────────────────── */
+
+.cycle-bar {
   max-width: 320px;
-  margin: 2px auto -6px;
-  display: block;
+  margin: 4px auto 0;
+  padding: 0 6px;
 }
 
-.arc-seg {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: arc-draw 0.7s ease-out forwards;
+.cycle-bar-track {
+  position: relative;
+  height: 12px;
+  border-radius: 99px;
+  background: var(--line);
+  margin-top: 30px; /* "오늘" 라벨 자리 */
 }
 
-@keyframes arc-draw {
+.cycle-seg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 99px;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: seg-grow 0.5s ease-out forwards;
+}
+
+@keyframes seg-grow {
   to {
-    stroke-dashoffset: 0;
+    transform: scaleX(1);
   }
 }
 
-.arc-today {
-  animation: rise-in 0.5s ease-out 0.7s both;
+.cycle-ovu {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border: 2px solid var(--violet);
+  border-radius: 50%;
+  z-index: 2;
 }
 
-/* 오늘 하트 뒤로 퍼지는 파동 */
-.arc-today-halo {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: today-pulse 2.6s ease-out 1.2s infinite;
+.cycle-today {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  animation: rise-in 0.5s ease-out 0.6s both;
+}
+
+.cycle-today::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border-radius: 50%;
+  background: var(--rose);
+  z-index: -1;
   opacity: 0;
+  animation: today-pulse 2.6s ease-out 1.2s infinite;
+}
+
+.cycle-today-label {
+  position: absolute;
+  top: -24px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--rose-deep);
+  white-space: nowrap;
+}
+
+.cycle-bar-dates {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--ink-soft);
 }
 
 @keyframes today-pulse {

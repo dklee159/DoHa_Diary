@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { api } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { addDays, diffDays, fmtFull, fmtMonthDay, todayStr } from '../lib/date'
-import { STATUS_LABEL } from '../lib/cycleView'
-import { CycleArc } from '../components/CycleArc'
+import { STATUS_LABEL, statusSentence } from '../lib/cycleView'
+import { CycleBar } from '../components/CycleBar'
 import type {
   EventItem,
   PartnerResponse,
@@ -29,9 +29,9 @@ function statusLine(summary: TodaySummary, periodDay: number | null): {
   const { status, dDay } = summary
   if (status === 'period') {
     return {
-      big: periodDay ? `${periodDay}일차` : '생리 중',
+      big: periodDay ? `마법 ${periodDay}일차` : '마법의 날',
       em: true,
-      sub: '오늘은 생리 중이에요. 몸을 따뜻하게 해주세요.',
+      sub: '오늘은 마법에 걸린 날이에요. 몸을 따뜻하게 해주세요.',
     }
   }
   if (dDay === null) {
@@ -48,7 +48,9 @@ function statusLine(summary: TodaySummary, periodDay: number | null): {
   return {
     big: `D-${dDay}`,
     em: false,
-    sub: label ? `다음 생리까지 ${dDay}일 · 오늘은 ${label}예요.` : `다음 생리까지 ${dDay}일 남았어요.`,
+    sub: label
+      ? `다음 생리까지 ${dDay}일 · 오늘은 ${statusSentence(status)}.`
+      : `다음 생리까지 ${dDay}일 남았어요.`,
   }
 }
 
@@ -105,9 +107,9 @@ export default function Home() {
       {heroData && line ? (
         <section className="hero rise-in" aria-label="오늘 상태">
           {heroOwner && <p className="hero-owner">{heroOwner}</p>}
-          <CycleArc periods={heroData.periods} prediction={heroData.prediction} today={today} />
+          <CycleBar periods={heroData.periods} prediction={heroData.prediction} today={today} />
           <p className="arc-legend" aria-hidden>
-            <span><i style={{ background: 'var(--rose)' }} />생리</span>
+            <span><i style={{ background: 'var(--rose)' }} />마법</span>
             <span><i style={{ background: 'var(--violet)' }} />가임기</span>
             <span><i style={{ background: 'var(--peach)' }} />PMS</span>
             <span>
@@ -154,7 +156,7 @@ export default function Home() {
             <p className="partner-status">
               {partnerCycle
                 ? partnerCycle.today.status !== 'none'
-                  ? `오늘은 ${STATUS_LABEL[partnerCycle.today.status]}예요.`
+                  ? `오늘은 ${statusSentence(partnerCycle.today.status)}.`
                   : partnerCycle.today.dDay !== null && partnerCycle.today.dDay >= 0
                     ? `다음 생리까지 D-${partnerCycle.today.dDay}`
                     : '함께 지켜봐 주세요.'

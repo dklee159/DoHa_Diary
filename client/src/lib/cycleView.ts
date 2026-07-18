@@ -28,10 +28,19 @@ export function statusForDate(
 }
 
 export const STATUS_LABEL: Record<DayStatus, string> = {
-  period: '생리 중',
+  period: '마법의 날',
   ovulation: '배란 예정일',
   fertile: '가임기',
   pms: 'PMS 기간',
   predicted_period: '생리 예정',
   none: '',
+}
+
+// "~예요/이에요" 조사를 받침에 맞게 붙인 문장 조각
+export function statusSentence(status: DayStatus): string {
+  const label = STATUS_LABEL[status]
+  if (!label) return ''
+  const code = label.charCodeAt(label.length - 1)
+  const hasBatchim = code >= 0xac00 && code <= 0xd7a3 && (code - 0xac00) % 28 !== 0
+  return `${label}${hasBatchim ? '이에요' : '예요'}`
 }

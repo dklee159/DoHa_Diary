@@ -8,6 +8,20 @@ const SHOTS = 'e2e/shots'
 mkdirSync(SHOTS, { recursive: true })
 
 const suffix = Date.now().toString(36).slice(-5)
+
+// UI는 기기(로컬) 날짜를 쓰므로 D-Day 기대값도 실행 시점 기준으로 계산한다.
+// (마지막 생리 7/1 + 주기 28일 → 다음 예정일 2026-07-29 고정)
+function localToday() {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+function dayDiff(a, b) {
+  const p = (s) => s.split('-').map(Number)
+  const [ay, am, ad] = p(a)
+  const [by, bm, bd] = p(b)
+  return Math.round((Date.UTC(by, bm - 1, bd) - Date.UTC(ay, am - 1, ad)) / 864e5)
+}
+const EXPECTED_DDAY = `D-${dayDiff(localToday(), '2026-07-29')}`
 const A = { username: `jihye_${suffix}`, password: 'test1234', name: '지혜' }
 const B = { username: `doha_${suffix}`, password: 'test1234', name: '도하' }
 
@@ -70,7 +84,7 @@ try {
   await a.waitForURL(`${BASE}/`)
   await a.waitForSelector('.dday')
   const dday = (await a.textContent('.dday'))?.trim()
-  check('① A 홈 D-Day 표시', dday === 'D-11', `표시값: ${dday} (7/1+28일=7/29 예정, 오늘 7/18)`)
+  check('① A 홈 D-Day 표시', dday === EXPECTED_DDAY, `표시값: ${dday} (기대 ${EXPECTED_DDAY}, 7/29 예정)`)
   const hint = await a.textContent('.hero-hint')
   check(
     '① A 홈 예측 요약 (다음 생리 7/29·배란 7/15)',
@@ -197,7 +211,7 @@ try {
   const bDday = (await b.textContent('.dday'))?.trim()
   check(
     '③ B 홈에 지혜의 주기 히어로 표시',
-    owner === '지혜님의 이번 주기' && bDday === 'D-11',
+    owner === '지혜님의 이번 주기' && bDday === EXPECTED_DDAY,
     `${owner} / ${bDday}`,
   )
   await b.waitForTimeout(1400)
