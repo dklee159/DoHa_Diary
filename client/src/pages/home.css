@@ -45,6 +45,26 @@
   animation: rise-in 0.5s ease-out 0.7s both;
 }
 
+/* 오늘 하트 뒤로 퍼지는 파동 */
+.arc-today-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: today-pulse 2.6s ease-out 1.2s infinite;
+  opacity: 0;
+}
+
+@keyframes today-pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.4;
+  }
+  70%,
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
 /* 아치 색 범례 — D-Day와 경쟁하지 않게 조용히 */
 .arc-legend {
   display: flex;

@@ -122,10 +122,24 @@ export function CycleArc({
       <circle {...polar(START_DEG)} r={3.4} fill="var(--rose)" />
       <circle {...polar(END_DEG)} r={3.4} fill="#fff" stroke="var(--rose)" strokeWidth={2} />
 
-      {/* 오늘 점 */}
+      {/* 오늘 위치 — 은은한 파동 위의 작은 하트 */}
       <g className="arc-today">
-        <circle cx={todayPos.x} cy={todayPos.y} r={7.5} fill="var(--ink)" opacity={0.12} />
-        <circle cx={todayPos.x} cy={todayPos.y} r={4.5} fill="var(--ink)" />
+        <circle
+          className="arc-today-halo"
+          cx={todayPos.x}
+          cy={todayPos.y}
+          r={8}
+          fill="var(--rose)"
+        />
+        <path
+          d="M0,2.8 C-1,0.9 -3.6,0.2 -3.6,-1.6 C-3.6,-2.9 -2.5,-3.7 -1.6,-3.7 C-0.9,-3.7 -0.3,-3.3 0,-2.6 C0.3,-3.3 0.9,-3.7 1.6,-3.7 C2.5,-3.7 3.6,-2.9 3.6,-1.6 C3.6,0.2 1,0.9 0,2.8 Z"
+          transform={`translate(${todayPos.x.toFixed(1)} ${todayPos.y.toFixed(1)}) scale(1.5)`}
+          fill="#fff"
+          stroke="var(--rose-deep)"
+          strokeWidth={1.8}
+          strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
+        />
       </g>
     </svg>
   )

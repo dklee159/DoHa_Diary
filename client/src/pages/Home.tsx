@@ -110,7 +110,10 @@ export default function Home() {
             <span><i style={{ background: 'var(--rose)' }} />생리</span>
             <span><i style={{ background: 'var(--violet)' }} />가임기</span>
             <span><i style={{ background: 'var(--peach)' }} />PMS</span>
-            <span><i style={{ background: 'var(--ink)' }} />오늘</span>
+            <span>
+              <i style={{ width: 9, height: 9, background: '#fff', border: '2px solid var(--rose-deep)' }} />
+              오늘
+            </span>
           </p>
           <p className="dday">{line.em ? <em>{line.big}</em> : line.big}</p>
           <p className="hero-status">{line.sub}</p>
