@@ -6,7 +6,7 @@ import { ah } from './util.js'
 
 // 로컬 개발용 기본 시크릿. 실서버 배포 시 JWT_SECRET 환경변수를 반드시 설정할 것.
 const JWT_SECRET = process.env.JWT_SECRET ?? 'doha-diary-dev-secret'
-const TOKEN_TTL = '30d'
+const TOKEN_TTL = '180d'
 
 export const authRouter = Router()
 

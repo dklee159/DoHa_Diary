@@ -80,6 +80,11 @@ try {
   await a.waitForTimeout(1400) // 아치 드로잉 애니메이션 완료 후 촬영
   await shot(a, '01-A-home')
 
+  // 🔍 새로고침해도 로그인이 유지되어야 한다 (자동 로그인)
+  await a.reload()
+  await a.waitForSelector('.home-greeting')
+  check('🔍 새로고침 후 로그인 유지', !a.url().includes('/login'))
+
   // ── ② A 캘린더: 생리/가임기/배란/예정 렌더 ────────────────
   await a.click('.bottom-nav a[href="/calendar"]')
   await a.waitForSelector('.cal-band') // 예측 데이터 렌더까지 대기
