@@ -54,6 +54,8 @@
   border-radius: 99px;
   background: var(--line);
   transition: background-color 0.15s ease;
+  /* 장식일 뿐이므로 클릭은 아래의 체크박스로 통과시킨다 */
+  pointer-events: none;
 }
 
 .switch .track::after {

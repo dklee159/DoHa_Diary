@@ -138,6 +138,17 @@ try {
   check('③ A 초대 코드 생성', /^[A-Z2-9]{6}$/.test(code), `코드: ${code}`)
   await shot(a, '04-A-invite')
 
+  // 🔍 공유 토글을 실제로 클릭했을 때 반영되는지 (UI 경로)
+  const shareToggle = 'input[aria-label="연인에게 내 주기 보여주기"]'
+  await a.click(shareToggle)
+  await a.waitForTimeout(500)
+  const offMe = await apiCall(a, '/me')
+  check('🔍 공유 토글 클릭 → OFF 저장', offMe.json.user.shareCycle === false)
+  await a.click(shareToggle)
+  await a.waitForTimeout(500)
+  const onMe = await apiCall(a, '/me')
+  check('🔍 공유 토글 재클릭 → ON 복구', onMe.json.user.shareCycle === true)
+
   // ── ③ B(도하) 가입 — 추적 안 함 → 코드로 연결 ─────────────
   const ctxB = await browser.newContext({ viewport })
   const b = await ctxB.newPage()
