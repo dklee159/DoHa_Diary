@@ -7,8 +7,9 @@ import { todayStr } from '../lib/date'
 export default function Onboarding() {
   const [step, setStep] = useState<'role' | 'cycle'>('role')
   const [lastStart, setLastStart] = useState('')
-  const [cycleLen, setCycleLen] = useState(28)
-  const [periodLen, setPeriodLen] = useState(5)
+  // 입력 중 빈 칸을 허용하기 위해 문자열로 들고, 제출 시 숫자로 검증한다
+  const [cycleLen, setCycleLen] = useState('28')
+  const [periodLen, setPeriodLen] = useState('5')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const { refreshUser } = useAuth()
@@ -29,6 +30,16 @@ export default function Onboarding() {
 
   async function finishAsTracker(e: FormEvent) {
     e.preventDefault()
+    const cycle = Number(cycleLen)
+    const period = Number(periodLen)
+    if (!Number.isInteger(cycle) || cycle < 21 || cycle > 60) {
+      setError('평균 주기는 21~60일 사이 숫자로 입력해 주세요.')
+      return
+    }
+    if (!Number.isInteger(period) || period < 2 || period > 10) {
+      setError('평균 생리 기간은 2~10일 사이 숫자로 입력해 주세요.')
+      return
+    }
     setBusy(true)
     setError('')
     try {
@@ -37,7 +48,7 @@ export default function Onboarding() {
       }
       await api('/me', {
         method: 'PATCH',
-        body: { cycleLenOverride: cycleLen, periodLenOverride: periodLen, onboarded: true },
+        body: { cycleLenOverride: cycle, periodLenOverride: period, onboarded: true },
       })
       await refreshUser()
       navigate('/', { replace: true })
@@ -103,10 +114,11 @@ export default function Onboarding() {
           <input
             id="cycleLen"
             type="number"
+            inputMode="numeric"
             min={21}
             max={60}
             value={cycleLen}
-            onChange={(e) => setCycleLen(Number(e.target.value))}
+            onChange={(e) => setCycleLen(e.target.value)}
             required
           />
         </div>
@@ -115,10 +127,11 @@ export default function Onboarding() {
           <input
             id="periodLen"
             type="number"
+            inputMode="numeric"
             min={2}
             max={10}
             value={periodLen}
-            onChange={(e) => setPeriodLen(Number(e.target.value))}
+            onChange={(e) => setPeriodLen(e.target.value)}
             required
           />
         </div>

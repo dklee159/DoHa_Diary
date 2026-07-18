@@ -32,8 +32,9 @@ export default function Settings() {
   const [partner, setPartner] = useState<PartnerResponse | null>(null)
   const [joinCode, setJoinCode] = useState('')
   const [displayName, setDisplayName] = useState(user?.displayName ?? '')
-  const [cycleLen, setCycleLen] = useState<number>(user?.cycleLenOverride ?? 28)
-  const [periodLen, setPeriodLen] = useState<number>(user?.periodLenOverride ?? 5)
+  // 입력 중 빈 칸을 허용하기 위해 문자열로 들고, 저장 시 숫자로 검증한다
+  const [cycleLen, setCycleLen] = useState(String(user?.cycleLenOverride ?? 28))
+  const [periodLen, setPeriodLen] = useState(String(user?.periodLenOverride ?? 5))
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
@@ -182,8 +183,8 @@ export default function Settings() {
             <p className="setting-label">평균 주기</p>
             <div className="num-inline">
               <input
-                type="number" min={21} max={60} value={cycleLen}
-                onChange={(e) => setCycleLen(Number(e.target.value))}
+                type="number" inputMode="numeric" min={21} max={60} value={cycleLen}
+                onChange={(e) => setCycleLen(e.target.value)}
                 aria-label="평균 주기(일)"
               />
               <span className="setting-desc">일</span>
@@ -193,8 +194,8 @@ export default function Settings() {
             <p className="setting-label">평균 생리 기간</p>
             <div className="num-inline">
               <input
-                type="number" min={2} max={10} value={periodLen}
-                onChange={(e) => setPeriodLen(Number(e.target.value))}
+                type="number" inputMode="numeric" min={2} max={10} value={periodLen}
+                onChange={(e) => setPeriodLen(e.target.value)}
                 aria-label="평균 생리 기간(일)"
               />
               <span className="setting-desc">일</span>
@@ -204,9 +205,19 @@ export default function Settings() {
             className="btn btn-ghost"
             style={{ marginTop: 10 }}
             disabled={busy}
-            onClick={() =>
-              patchMe({ cycleLenOverride: cycleLen, periodLenOverride: periodLen }, '저장했어요.')
-            }
+            onClick={() => {
+              const cycle = Number(cycleLen)
+              const period = Number(periodLen)
+              if (!Number.isInteger(cycle) || cycle < 21 || cycle > 60) {
+                setError('평균 주기는 21~60일 사이 숫자로 입력해 주세요.')
+                return
+              }
+              if (!Number.isInteger(period) || period < 2 || period > 10) {
+                setError('평균 생리 기간은 2~10일 사이 숫자로 입력해 주세요.')
+                return
+              }
+              patchMe({ cycleLenOverride: cycle, periodLenOverride: period }, '저장했어요.')
+            }}
           >
             기본값 저장
           </button>

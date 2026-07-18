@@ -58,6 +58,13 @@ try {
   const a = await ctxA.newPage()
   await signup(a, A)
   await a.click('text=내 주기를 기록할래요')
+
+  // 🔍 숫자 입력을 모두 지웠을 때 '0'이 되살아나지 않아야 한다 (controlled input 회귀)
+  await a.fill('#cycleLen', '')
+  const emptyVal = await a.inputValue('#cycleLen')
+  check('🔍 주기 입력 비우면 빈 칸 유지 (0 안 생김)', emptyVal === '', `값: "${emptyVal}"`)
+  await a.fill('#cycleLen', '28')
+
   await a.fill('#lastStart', '2026-07-01')
   await a.click('button:has-text("시작하기")')
   await a.waitForURL(`${BASE}/`)
